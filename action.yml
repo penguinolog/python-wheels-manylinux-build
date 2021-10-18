@@ -22,11 +22,13 @@ inputs:
   build-executable:
     description: 'executable name (relative to python root) for package build'
     required: true
-    default: 'setuptools'
+    # default: 'setuptools'
+    default: 'pip'
   build-command:
     description: 'command for executable to build package'
     required: true
-    default: 'setup.py bdist_wheel clean'
+    # default: 'setup.py bdist_wheel clean' # setuptools
+    default: '-w ./dist --no-deps'  # pip
   prebuild-path:
     description: 'path for prebuild operations, relative to repository root'
     required: false
