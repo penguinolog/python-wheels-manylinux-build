@@ -22,7 +22,7 @@ inputs:
   build-executable:
     description: 'executable name (relative to python root) for package build'
     required: true
-    # default: 'setuptools'
+    # default: 'python'  # classic setup.py
     default: 'pip'
   build-command:
     description: 'command for executable to build package'
@@ -47,7 +47,7 @@ runs:
     - ${{ inputs.pre-build-command }}
     - ${{ inputs.build-executable}}
     - ${{ inputs.build-command}}
-    - ${{ prebuild-path }}
+    - ${{ inputs.prebuild-path }}
     - ${{ inputs.package-path }}
 branding:
   icon: 'package'
