@@ -29,7 +29,6 @@ fi
 cd /github/workspace/"${PACKAGE_PATH}"
 
 # pre-cleanup
-rm -rf *.egg-info
 find -noleaf -name "*.py[co]" -delete
 
 # Compile wheels
@@ -77,7 +76,6 @@ fi
 # Cleanup
 rm -rf .eggs
 rm -rf build
-rm -rf *.egg-info
 # Clean caches and cythonized
 # Clean original not repared wheels to avoid conflicts. This is "control shot".
 find -noleaf \( -name "*.py[co]" -o -iname "*-linux_*.whl" \) -delete
