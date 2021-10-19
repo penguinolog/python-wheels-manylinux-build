@@ -55,10 +55,18 @@ for PY_VER in "${arrPY_VERSIONS[@]}"; do
 done
 
 # Bundle external shared libraries into the wheels
-# find -exec does not preserve failed exit codes, so use an output file for failures
-failed_wheels=$PWD/failed-wheels
+# use an output file for failures and collect all failures
+# write failed wheels to /tmp to avoid git status changing.
+failed_wheels=/tmp/failed-wheels
 rm -f "$failed_wheels"
-find . -type f -iname "*-linux*.whl" -exec sh -c "auditwheel repair '{}' -w \$(dirname '{}') --plat '${PLAT}' || { echo 'Repairing wheels failed.'; auditwheel show '{}' >> "$failed_wheels"; }" \;
+
+for name in $(find . -type f -iname "*-linux_*.whl"); do
+    if auditwheel repair '${name}' -w \$(dirname '${name}') --plat '${PLAT}' && rm '${name}'; then
+        rm '${name}'  # do not pollute dist and allow multiple runs with different platforms in queue
+    else
+        auditwheel show '{name}' >> "$failed_wheels"
+    fi
+done
 
 if [[ -f "$failed_wheels" ]]; then
     echo "Repairing wheels failed:"
@@ -71,7 +79,8 @@ rm -rf .eggs
 rm -rf build
 rm -rf *.egg-info
 # Clean caches and cythonized
-find -noleaf -name "*.py[co]" -delete
+# Clean original not repared wheels to avoid conflicts. This is "control shot".
+find -noleaf \( -name "*.py[co]" -o -iname "*-linux_*.whl" \) -delete
 
 echo "Succesfully build wheels:"
 find . -type f -iname "*-manylinux*.whl"
