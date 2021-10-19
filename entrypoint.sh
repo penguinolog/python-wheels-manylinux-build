@@ -61,10 +61,10 @@ failed_wheels=/tmp/failed-wheels
 rm -f "$failed_wheels"
 
 for name in $(find . -type f -iname "*-linux_*.whl"); do
-    if auditwheel repair '${name}' -w \$(dirname '${name}') --plat '${PLAT}' && rm '${name}'; then
-        rm '${name}'  # do not pollute dist and allow multiple runs with different platforms in queue
+    if auditwheel repair "${name}" -w $(dirname "${name}") --plat "${PLAT}"; then
+        rm "${name}"  # do not pollute dist and allow multiple runs with different platforms in queue
     else
-        auditwheel show '{name}' >> "$failed_wheels"
+        auditwheel show "${name}" >> "$failed_wheels"
     fi
 done
 
