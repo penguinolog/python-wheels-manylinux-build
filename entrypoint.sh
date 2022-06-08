@@ -17,6 +17,8 @@ PACKAGE_PATH=$8
 # https://github.com/RalfG/python-wheels-manylinux-build/issues/26
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib
 
+git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+
 cd "${GITHUB_WORKSPACE}"/"${PACKAGE_PATH}"
 
 if [ ! -z "$SYSTEM_PACKAGES" ]; then
