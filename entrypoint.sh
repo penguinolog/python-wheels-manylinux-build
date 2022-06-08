@@ -17,13 +17,22 @@ PACKAGE_PATH=$8
 # https://github.com/RalfG/python-wheels-manylinux-build/issues/26
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib
 
+cd "${GITHUB_WORKSPACE}"/"${PACKAGE_PATH}"
+
 if [ ! -z "$SYSTEM_PACKAGES" ]; then
-    yum install -y ${SYSTEM_PACKAGES}  || { echo "Installing yum package(s) failed."; exit 1; }
+    if command -v apt-get >/dev/null; then
+        apt-get update
+        apt-get install -y ${SYSTEM_PACKAGES}  || { echo "Installing apt package(s) failed."; exit 1; }
+    elif command -v yum >/dev/null; then
+        yum install -y ${SYSTEM_PACKAGES}  || { echo "Installing yum package(s) failed."; exit 1; }
+    else
+        echo "Package managers apt or yum not found."; exit 1;
+    fi
 fi
 
 if [ ! -z "$PRE_BUILD_COMMAND" ]; then
     cd /github/workspace/"$PREBUILD_PATH"
-    $PRE_BUILD_COMMAND || { echo "Pre-build command failed."; exit 1; }
+    eval $PRE_BUILD_COMMAND || { echo "Pre-build command failed."; exit 1; }
 fi
 
 cd /github/workspace/"${PACKAGE_PATH}"
