@@ -1,6 +1,6 @@
-FROM quay.io/pypa/manylinux2010_x86_64
+FROM quay.io/pypa/manylinux2010_i686
 
-ENV PLAT manylinux2010_x86_64\
+ENV PLAT manylinux2010_i686\
     PYTHONDONTWRITEBYTECODE=1
 
 COPY entrypoint.sh /entrypoint.sh
