@@ -16,6 +16,8 @@ PACKAGE_PATH=$8
 # Temporary workaround for LD_LIBRARY_PATH issue. See
 # https://github.com/RalfG/python-wheels-manylinux-build/issues/26
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib
+# Do not pollute with byte code files
+export PYTHONDONTWRITEBYTECODE=1
 
 git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 
